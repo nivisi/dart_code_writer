@@ -1,4 +1,4 @@
-import 'package:dart_code_writer/src/dart_code_writer.dart';
+import '../lib/dart_code_writer.dart';
 
 void main() {
   StringBuffer buffer = StringBuffer();
