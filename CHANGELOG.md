@@ -1,3 +1,3 @@
-## 1.0.0
+## 0.0.1
 
-- Initial version.
+- Just a quick release with the very base, not refactored and not tested code.
