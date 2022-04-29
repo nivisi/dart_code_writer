@@ -15,6 +15,8 @@ class DartCodeWriter {
   static ClassBuilder get createClass => ClassBuilder();
   static MixinBuilder get createMixin => MixinBuilder();
   static ExtensionBuilder get createExtension => ExtensionBuilder();
+  static GetterBuilder get createGetter => GetterBuilder();
+  static SetterBuilder get createSetter => SetterBuilder();
 
   static void static(StringBuffer buffer) => buffer.writeln(('late'));
   static void late(StringBuffer buffer) => buffer.writeln(('late'));
@@ -135,11 +137,11 @@ class DartCodeWriter {
 
     final nameToWrite = !isPrivate
         ? name
-        : isNullable && name.startsWith('_')
-            ? '_$name'
-            : name;
+        : name.startsWith('_')
+            ? name
+            : '_$name';
 
-    buffer.write('$nameToWrite');
+    buffer.write(nameToWrite);
 
     if (defaultValue != null) {
       buffer.write(' = $defaultValue');
@@ -147,6 +149,110 @@ class DartCodeWriter {
 
     buffer.write(';');
   }
+
+  static void writeGetterSignature(
+    StringBuffer buffer, {
+    required String name,
+    String? type,
+    bool isStatic = false,
+    bool isPrivate = false,
+    bool isNullable = false,
+    bool isOverriding = false,
+    String? returns,
+    List<String>? customReturnLines,
+  }) {
+    if (isOverriding) {
+      buffer.writeln('@override');
+    }
+
+    if (isStatic) {
+      buffer.write('static ');
+    }
+
+    if (type != null) {
+      final typeToWrite = !isNullable
+          ? type
+          : type.contains('?')
+              ? type
+              : '$type?';
+
+      buffer.write('$typeToWrite ');
+    }
+
+    buffer.write('get ');
+
+    final nameToWrite = !isPrivate
+        ? name
+        : name.startsWith('_')
+            ? name
+            : '_$name';
+
+    buffer.write(nameToWrite);
+
+    if (returns != null) {
+      buffer.write(' => $returns');
+      if (!returns.endsWith(';')) {
+        buffer.write(';');
+      }
+    } else if (customReturnLines != null) {
+      buffer.writeln('{');
+      buffer.writeln(customReturnLines.join('\n'));
+      buffer.writeln('}');
+    } else {
+      buffer.write(';');
+    }
+  }
+
+  static void writeSetterSignature(
+    StringBuffer buffer, {
+    required String name,
+    required String paramName,
+    String? paramType,
+    bool isStatic = false,
+    bool isPrivate = false,
+    bool isOverriding = false,
+    String? sets,
+    List<String>? customSetLines,
+  }) {
+    if (isOverriding) {
+      buffer.writeln('@override');
+    }
+
+    if (isStatic) {
+      buffer.write('static ');
+    }
+
+    buffer.write('set ');
+
+    final nameToWrite = !isPrivate
+        ? name
+        : name.startsWith('_')
+            ? name
+            : '_$name';
+
+    buffer.write('$nameToWrite(');
+    if (paramType != null) {
+      buffer.write('$paramType ');
+    }
+    buffer.write('$paramName ');
+
+    buffer.write(')');
+
+    if (sets != null) {
+      buffer.write(' => $sets');
+      if (!sets.endsWith(';')) {
+        buffer.write(';');
+      }
+    } else if (customSetLines != null) {
+      buffer.writeln('{');
+      buffer.writeln(customSetLines.join('\n'));
+      buffer.writeln('}');
+    } else {
+      buffer.write(';');
+    }
+  }
+
+  // set sth(int p)
 
   static void writeMethodSignature(
     StringBuffer buffer, {
@@ -228,7 +334,7 @@ class DartCodeWriter {
 
     if (parameterType == MethodParameterType.regular) {
       if (type != null) {
-        buffer.write('$type');
+        buffer.write(type);
       }
 
       buffer.write(' $name,');
@@ -240,7 +346,7 @@ class DartCodeWriter {
       if (type != null) {
         buffer.write('$type ');
       }
-      buffer.write('$name');
+      buffer.write(name);
       return;
     }
 

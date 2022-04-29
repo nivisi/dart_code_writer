@@ -4,8 +4,10 @@ import '../writeable.dart';
 
 part 'src/class_builder.dart';
 part 'src/extension_builder.dart';
-part 'src/fields_builder.dart';
+part 'src/field_builder.dart';
+part 'src/getter_builder.dart';
 part 'src/method_builder.dart';
 part 'src/method_parameter.dart';
 part 'src/method_parameter_type.dart';
 part 'src/mixin_builder.dart';
+part 'src/setter_builder.dart';

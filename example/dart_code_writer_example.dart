@@ -1,4 +1,4 @@
-import '../lib/src/dart_code_writer.dart';
+import 'package:dart_code_writer/src/dart_code_writer.dart';
 
 void main() {
   StringBuffer buffer = StringBuffer();
@@ -25,7 +25,6 @@ void main() {
       .withName('name')
       .withReturnType('String')
       .static
-      // .private
       .nonVirtual
       .overriding
       .callsSuper
@@ -75,10 +74,39 @@ void main() {
         'return this.select((MyController controller) => controller.value);',
       );
 
+  final someGetter = DartCodeWriter.createGetter
+      .withName('some')
+      .withType('myType')
+      .returns('"HELLO!"');
+
+  final customLines = DartCodeWriter.createGetter
+      .withName('customLines')
+      .withType('myType')
+      .withCustomGetLine('var r = "privet";')
+      .withCustomGetLine('return r;');
+
+  final someSetter = DartCodeWriter.createSetter
+      .withName('some')
+      .private
+      .withParameterName('param')
+      .withParameterType('int')
+      .sets(field: 'other', to: 'this');
+
+  final setterCustomLines = DartCodeWriter.createSetter
+      .withName('customLines')
+      .withParameterName('param')
+      .withParameterType('int')
+      .withCustomSetLine('var something = 10;')
+      .withCustomSetLine('return something;');
+
   DartCodeWriter.createExtension
       .withName('MyControllerExtension')
       .on('BuildContext')
       .withMethod(watchMethod)
+      .withGetter(customLines)
+      .withGetter(someGetter)
+      .withSetter(someSetter)
+      .withSetter(setterCustomLines)
       .writeTo(buffer);
 
   print(buffer.toString());

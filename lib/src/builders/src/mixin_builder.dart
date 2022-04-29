@@ -3,9 +3,11 @@ part of '../builders.dart';
 class MixinBuilder implements BaseBuilder {
   String? _name;
   String? _on;
-  List<String> _annotations = [];
-  List<MethodBuilder> _methods = [];
-  List<FieldBuilder> _fields = [];
+  final List<String> _annotations = [];
+  final List<MethodBuilder> _methods = [];
+  final List<FieldBuilder> _fields = [];
+  final List<GetterBuilder> _getters = [];
+  final List<SetterBuilder> _setters = [];
 
   MixinBuilder withName(String name) {
     _name = name;
@@ -29,6 +31,16 @@ class MixinBuilder implements BaseBuilder {
 
   MixinBuilder withMethod(MethodBuilder method) {
     _methods.add(method);
+    return this;
+  }
+
+  MixinBuilder withGetter(GetterBuilder getter) {
+    _getters.add(getter);
+    return this;
+  }
+
+  MixinBuilder withSetter(SetterBuilder setter) {
+    _setters.add(setter);
     return this;
   }
 
@@ -62,6 +74,32 @@ class MixinBuilder implements BaseBuilder {
     for (final field in publicFields) {
       buffer.write('  ');
       field.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    buffer.writeln();
+
+    final privateGetters = _getters.where((element) => element._isPrivate);
+    for (final getter in privateGetters) {
+      getter.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    final privateSetters = _setters.where((element) => element._isPrivate);
+    for (final setter in privateSetters) {
+      setter.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    final publicGetters = _getters.where((element) => !element._isPrivate);
+    for (final getter in publicGetters) {
+      getter.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    final publicSetters = _setters.where((element) => !element._isPrivate);
+    for (final setter in publicSetters) {
+      setter.writeTo(buffer);
       buffer.writeln();
     }
 

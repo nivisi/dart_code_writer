@@ -9,9 +9,11 @@ class MethodBuilder implements BaseBuilder {
   bool _isProtected = false;
   bool _isNonVirtual = false;
   bool _isStatic = false;
+  // TODO: Generate super.call();
   bool _callsSuper = false;
   bool _mustCallSuper = false;
   bool _isPrivate = false;
+  String? _customSignature;
   final List<String> _generics = [];
   final List<MethodParameter> _parameters = [];
   final List<String> _lines = [];
@@ -124,7 +126,7 @@ class MethodBuilder implements BaseBuilder {
     return method;
   }
 
-  // @override
+  @override
   void writeTo(StringBuffer buffer) {
     if (_isOverriding) {
       DartCodeWriter.override(buffer);

@@ -3,12 +3,14 @@ part of '../builders.dart';
 class ClassBuilder implements BaseBuilder {
   String? _name;
   bool _isAbstract = false;
-  List<String> _implements = [];
+  final List<String> _implements = [];
   String? _extends;
-  List<String> _with = [];
-  List<String> _annotations = [];
-  List<MethodBuilder> _methods = [];
-  List<FieldBuilder> _fields = [];
+  final List<String> _with = [];
+  final List<String> _annotations = [];
+  final List<MethodBuilder> _methods = [];
+  final List<FieldBuilder> _fields = [];
+  final List<GetterBuilder> _getters = [];
+  final List<SetterBuilder> _setters = [];
 
   ClassBuilder withName(String name) {
     _name = name;
@@ -42,6 +44,16 @@ class ClassBuilder implements BaseBuilder {
 
   ClassBuilder withMethod(MethodBuilder method) {
     _methods.add(method);
+    return this;
+  }
+
+  ClassBuilder withGetter(GetterBuilder getter) {
+    _getters.add(getter);
+    return this;
+  }
+
+  ClassBuilder withSetter(SetterBuilder setter) {
+    _setters.add(setter);
     return this;
   }
 
@@ -83,6 +95,32 @@ class ClassBuilder implements BaseBuilder {
     for (final field in publicFields) {
       buffer.write('  ');
       field.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    buffer.writeln();
+
+    final privateGetters = _getters.where((element) => element._isPrivate);
+    for (final getter in privateGetters) {
+      getter.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    final privateSetters = _setters.where((element) => element._isPrivate);
+    for (final setter in privateSetters) {
+      setter.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    final publicGetters = _getters.where((element) => !element._isPrivate);
+    for (final getter in publicGetters) {
+      getter.writeTo(buffer);
+      buffer.writeln();
+    }
+
+    final publicSetters = _setters.where((element) => !element._isPrivate);
+    for (final setter in publicSetters) {
+      setter.writeTo(buffer);
       buffer.writeln();
     }
 
