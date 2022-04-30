@@ -17,6 +17,7 @@ class MethodBuilder implements BaseBuilder {
   final List<String> _generics = [];
   final List<MethodParameter> _parameters = [];
   final List<String> _lines = [];
+  String? _oneLineCall;
 
   MethodBuilder withCustomSignature(String signature) {
     _customSignature = signature;
@@ -114,16 +115,32 @@ class MethodBuilder implements BaseBuilder {
   }
 
   MethodBuilder line(String line) {
+    if (_oneLineCall != null) {
+      throw Exception('lines cannot be used with one line call ');
+    }
+
     _lines.add(line);
     return this;
   }
 
   MethodBuilder lines(Iterable<String> lines) {
+    if (_oneLineCall != null) {
+      throw Exception('lines cannot be used with one line call ');
+    }
+
     var method = this;
     for (final line in lines) {
       method = method.line(line);
     }
     return method;
+  }
+
+  MethodBuilder withOneLineCall(String call) {
+    if (_lines.isNotEmpty) {
+      throw Exception('one line call cannot be used with lines');
+    }
+    _oneLineCall = call;
+    return this;
   }
 
   @override
@@ -169,7 +186,7 @@ class MethodBuilder implements BaseBuilder {
       buffer.write('(');
 
       if (_parameters.isEmpty) {
-        buffer.write(') {');
+        buffer.write(')');
       } else {
         buffer.writeln();
 
@@ -214,15 +231,20 @@ class MethodBuilder implements BaseBuilder {
           buffer.write('}');
         }
 
-        buffer.write(') {');
+        buffer.write(')');
       }
     }
 
-    buffer.writeln();
-    for (final line in _lines) {
-      buffer.writeln('  $line');
-    }
+    if (_oneLineCall != null) {
+      final endOfLine = _oneLineCall!.endsWith(';') ? '' : ';';
+      buffer.write('=> $_oneLineCall$endOfLine');
+    } else {
+      buffer.writeln('{');
+      for (final line in _lines) {
+        buffer.writeln('  $line');
+      }
 
-    buffer.write('}');
+      buffer.write('}');
+    }
   }
 }
