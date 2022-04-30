@@ -1,3 +1,7 @@
+## 0.0.3
+
+- Add one line call to method builder.
+
 ## 0.0.2
 
 - Added const constructors to classes.
