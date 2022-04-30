@@ -19,6 +19,9 @@ class MethodBuilder implements BaseBuilder {
   final List<String> _lines = [];
   String? _oneLineCall;
 
+  bool _hasOptional = false;
+  bool _hasNamed = false;
+
   MethodBuilder withCustomSignature(String signature) {
     _customSignature = signature;
     return this;
@@ -62,8 +65,30 @@ class MethodBuilder implements BaseBuilder {
     required String name,
     required String type,
   }) {
+    if (_hasNamed) {
+      throw Exception(
+        'An optional parameter was added, but this method already has a named parameter. Using both at the same time is not allowed.',
+      );
+    }
+    _hasOptional = true;
     _parameters.add(
       MethodParameter(name, type, MethodParameterType.optional),
+    );
+    return this;
+  }
+
+  MethodBuilder withNamedParameter({
+    required String name,
+    required String type,
+  }) {
+    if (_hasOptional) {
+      throw Exception(
+        'A named parameter was added, but this method already has an optional parameter. Using both at the same time is not allowed.',
+      );
+    }
+    _hasNamed = true;
+    _parameters.add(
+      MethodParameter(name, type, MethodParameterType.named),
     );
     return this;
   }
@@ -211,7 +236,7 @@ class MethodBuilder implements BaseBuilder {
         final optionalParameters = _parameters.where((e) => e.isOptional);
 
         if (optionalParameters.isNotEmpty) {
-          buffer.writeln('{');
+          buffer.writeln('[');
 
           for (final param in optionalParameters) {
             DartCodeWriter.writeMethodParameter(
@@ -221,7 +246,30 @@ class MethodBuilder implements BaseBuilder {
               parameterType: param.methodType,
             );
 
-            final isLast = regularParameters.last == param;
+            final isLast = optionalParameters.last == param;
+
+            if (!isLast) {
+              buffer.writeln();
+            }
+          }
+
+          buffer.write(']');
+        }
+
+        final namedParameters = _parameters.where((e) => e.isNamed);
+
+        if (namedParameters.isNotEmpty) {
+          buffer.writeln('{');
+
+          for (final param in namedParameters) {
+            DartCodeWriter.writeMethodParameter(
+              buffer,
+              name: param.name,
+              type: param.type,
+              parameterType: param.methodType,
+            );
+
+            final isLast = namedParameters.last == param;
 
             if (!isLast) {
               buffer.writeln();
