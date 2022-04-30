@@ -1,3 +1,7 @@
+## 0.0.4
+
+- Fix the optional/named parameters problem in method builders.
+
 ## 0.0.3
 
 - Add one line call to method builder.
