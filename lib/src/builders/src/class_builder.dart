@@ -3,6 +3,7 @@ part of '../builders.dart';
 class ClassBuilder implements BaseBuilder {
   String? _name;
   bool _isAbstract = false;
+  bool _isConstConstructor = false;
   final List<String> _implements = [];
   String? _extends;
   final List<String> _with = [];
@@ -14,6 +15,11 @@ class ClassBuilder implements BaseBuilder {
 
   ClassBuilder withName(String name) {
     _name = name;
+    return this;
+  }
+
+  ClassBuilder get withConstConstructor {
+    _isConstConstructor = true;
     return this;
   }
 
@@ -127,10 +133,14 @@ class ClassBuilder implements BaseBuilder {
     buffer.writeln();
 
     final finalFields = _fields.where(((element) => element._isFinal));
+    final constStr = _isConstConstructor ? 'const ' : '';
 
-    if (finalFields.isNotEmpty) {
+    if (finalFields.isEmpty) {
       buffer.write('  ');
-      buffer.writeln('const $_name(');
+      buffer.writeln('$constStr$_name();');
+    } else {
+      buffer.write('  ');
+      buffer.writeln('$constStr$_name(');
 
       final privateFinalFields =
           finalFields.where((element) => element._isPrivate);
