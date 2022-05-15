@@ -64,6 +64,7 @@ class MethodBuilder implements BaseBuilder {
   MethodBuilder withOptionalParameter({
     required String name,
     required String type,
+    String? defaultValue,
   }) {
     if (_hasNamed) {
       throw Exception(
@@ -72,7 +73,12 @@ class MethodBuilder implements BaseBuilder {
     }
     _hasOptional = true;
     _parameters.add(
-      MethodParameter(name, type, ParameterType.optional),
+      MethodParameter(
+        name,
+        type,
+        ParameterType.optional,
+        defaultValue: defaultValue,
+      ),
     );
     return this;
   }
@@ -80,6 +86,7 @@ class MethodBuilder implements BaseBuilder {
   MethodBuilder withNamedParameter({
     required String name,
     required String type,
+    String? defaultValue,
   }) {
     if (_hasOptional) {
       throw Exception(
@@ -88,7 +95,12 @@ class MethodBuilder implements BaseBuilder {
     }
     _hasNamed = true;
     _parameters.add(
-      MethodParameter(name, type, ParameterType.named),
+      MethodParameter(
+        name,
+        type,
+        ParameterType.named,
+        defaultValue: defaultValue,
+      ),
     );
     return this;
   }
@@ -223,7 +235,7 @@ class MethodBuilder implements BaseBuilder {
             buffer,
             name: param.name,
             type: param.type,
-            parameterType: param.methodType,
+            parameterType: param.methodParameterType,
           );
 
           final isLast = regularParameters.last == param;
@@ -243,7 +255,8 @@ class MethodBuilder implements BaseBuilder {
               buffer,
               name: param.name,
               type: param.type,
-              parameterType: param.methodType,
+              parameterType: param.methodParameterType,
+              defaultValue: param.defaultValue,
             );
 
             final isLast = optionalParameters.last == param;
@@ -266,7 +279,8 @@ class MethodBuilder implements BaseBuilder {
               buffer,
               name: param.name,
               type: param.type,
-              parameterType: param.methodType,
+              parameterType: param.methodParameterType,
+              defaultValue: param.defaultValue,
             );
 
             final isLast = namedParameters.last == param;

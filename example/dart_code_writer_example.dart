@@ -70,8 +70,12 @@ void main() {
       .withGenericType('TClass', thatExtends: 'MyClass')
       .withGenericType('TValue')
       .withParameter(name: 'hello', type: 'String')
-      .withNamedParameter(name: 'another', type: 'String')
-      .withNamedParameter(name: 'andAnotherOne', type: 'String?')
+      .withOptionalParameter(
+        name: 'another',
+        type: 'String',
+        defaultValue: 'defaultValue',
+      )
+      // .withNamedParameter(name: 'andAnotherOne', type: 'String?')
       .line(
         'return this.select((MyController controller) => controller.value);',
       );

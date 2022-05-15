@@ -325,19 +325,23 @@ class DartCodeWriter {
     required String name,
     String? type,
     ParameterType parameterType = ParameterType.regular,
+    String? defaultValue,
   }) {
     if (name.isEmpty) {
       throw Exception('Name must not be empty');
     }
 
+    final hasDefaultValue =
+        defaultValue != null && defaultValue.trim().isNotEmpty;
+
     buffer.write('  ');
 
     if (parameterType == ParameterType.regular) {
       if (type != null) {
-        buffer.write(type);
+        buffer.write('$type ');
       }
 
-      buffer.write(' $name,');
+      buffer.write('$name,');
 
       return;
     }
@@ -347,6 +351,10 @@ class DartCodeWriter {
         buffer.write('$type ');
       }
       buffer.write(name);
+      if (hasDefaultValue) {
+        buffer.write(' = $defaultValue');
+      }
+      buffer.write(',');
       return;
     }
 
@@ -354,10 +362,14 @@ class DartCodeWriter {
       if (type.contains('?')) {
         buffer.write('$type ');
       } else {
-        buffer.write('required $type ');
+        buffer.write('${!hasDefaultValue ? 'required ' : ''}$type ');
       }
     }
 
-    buffer.write('$name,');
+    buffer.write('$name');
+    if (hasDefaultValue) {
+      buffer.write(' = $defaultValue');
+    }
+    buffer.write(',');
   }
 }

@@ -3,11 +3,20 @@ part of '../builders.dart';
 class MethodParameter {
   final String name;
   final String type;
-  final ParameterType methodType;
+  final ParameterType methodParameterType;
+  final String? defaultValue;
 
-  MethodParameter(this.name, this.type, this.methodType);
+  const MethodParameter(
+    this.name,
+    this.type,
+    this.methodParameterType, {
+    this.defaultValue,
+  }) : assert(
+          defaultValue == null || methodParameterType != ParameterType.regular,
+          'Only named or optional params can have a default value',
+        );
 
-  bool get isRegular => methodType == ParameterType.regular;
-  bool get isNamed => methodType == ParameterType.named;
-  bool get isOptional => methodType == ParameterType.optional;
+  bool get isRegular => methodParameterType == ParameterType.regular;
+  bool get isNamed => methodParameterType == ParameterType.named;
+  bool get isOptional => methodParameterType == ParameterType.optional;
 }
