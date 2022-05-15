@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Allow to provide default values for method parameters.
+
 ## 0.0.4
 
 - Fix the optional/named parameters problem in method builders.
