@@ -179,13 +179,19 @@ class ClassBuilder implements BaseBuilder {
     final privateMethods = _methods.where((element) => element._isPrivate);
     final publicMethods = _methods.where((element) => !element._isPrivate);
 
-    for (final method in privateMethods) {
-      if (_isAbstract) method._inAbstractClass.writeTo(buffer);
+    for (var method in privateMethods) {
+      if (_isAbstract) {
+        method = method._inAbstractClass;
+      }
+      method.writeTo(buffer);
       buffer.writeln();
     }
 
-    for (final method in publicMethods) {
-      if (_isAbstract) method._inAbstractClass.writeTo(buffer);
+    for (var method in publicMethods) {
+      if (_isAbstract) {
+        method = method._inAbstractClass;
+      }
+      method.writeTo(buffer);
       buffer.writeln();
     }
 

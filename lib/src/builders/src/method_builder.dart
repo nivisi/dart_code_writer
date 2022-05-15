@@ -66,6 +66,7 @@ class MethodBuilder implements BaseBuilder {
     required String name,
     required String type,
     String? defaultValue,
+    bool forceNotRequired = false,
   }) {
     if (_hasNamed) {
       throw Exception(
@@ -79,6 +80,7 @@ class MethodBuilder implements BaseBuilder {
         type,
         ParameterType.optional,
         defaultValue: defaultValue,
+        forceNotRequired: forceNotRequired,
       ),
     );
     return this;
@@ -88,6 +90,7 @@ class MethodBuilder implements BaseBuilder {
     required String name,
     required String type,
     String? defaultValue,
+    bool forceNotRequired = false,
   }) {
     if (_hasOptional) {
       throw Exception(
@@ -101,6 +104,7 @@ class MethodBuilder implements BaseBuilder {
         type,
         ParameterType.named,
         defaultValue: defaultValue,
+        forceNotRequired: forceNotRequired,
       ),
     );
     return this;
@@ -287,6 +291,8 @@ class MethodBuilder implements BaseBuilder {
               type: param.type,
               parameterType: param.methodParameterType,
               defaultValue: param.defaultValue,
+              forceNotRequired: param.forceNotRequired,
+              isInAbstractClass: _isInAbstractClass,
             );
 
             final isLast = namedParameters.last == param;

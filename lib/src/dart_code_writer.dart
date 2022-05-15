@@ -319,7 +319,13 @@ class DartCodeWriter {
     String? type,
     ParameterType parameterType = ParameterType.regular,
     String? defaultValue,
+    bool isInAbstractClass = false,
+    bool forceNotRequired = false,
   }) {
+    if (!isInAbstractClass && forceNotRequired) {
+      throw Exception('Cannot forceNotRequired while not in an abstract class');
+    }
+
     if (name.isEmpty) {
       throw Exception('Name must not be empty');
     }
@@ -355,7 +361,9 @@ class DartCodeWriter {
       if (type.contains('?')) {
         buffer.write('$type ');
       } else {
-        buffer.write('${!hasDefaultValue ? 'required ' : ''}$type ');
+        final required = forceNotRequired ? '' : 'required ';
+
+        buffer.write('${!hasDefaultValue ? required : ''}$type ');
       }
     }
 
