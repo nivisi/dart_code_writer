@@ -1,11 +1,4 @@
 import 'builders/builders.dart';
-import 'exceptions/name_must_be_set.dart';
-
-mixin rofl {}
-
-class Something extends Object
-    with rofl
-    implements Exception, NameMustBeSetException {}
 
 class DartCodeWriter {
   const DartCodeWriter._();
@@ -366,7 +359,7 @@ class DartCodeWriter {
       }
     }
 
-    buffer.write('$name');
+    buffer.write(name);
     if (hasDefaultValue) {
       buffer.write(' = $defaultValue');
     }

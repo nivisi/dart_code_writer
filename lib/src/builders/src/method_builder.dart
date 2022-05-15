@@ -18,6 +18,7 @@ class MethodBuilder implements BaseBuilder {
   final List<MethodParameter> _parameters = [];
   final List<String> _lines = [];
   String? _oneLineCall;
+  bool _isInAbstractClass = false;
 
   bool _hasOptional = false;
   bool _hasNamed = false;
@@ -148,6 +149,11 @@ class MethodBuilder implements BaseBuilder {
 
   MethodBuilder get visibleForTesting {
     _isVisibleForTesting = true;
+    return this;
+  }
+
+  MethodBuilder get _inAbstractClass {
+    _isInAbstractClass = true;
     return this;
   }
 
@@ -300,13 +306,26 @@ class MethodBuilder implements BaseBuilder {
     if (_oneLineCall != null) {
       final endOfLine = _oneLineCall!.endsWith(';') ? '' : ';';
       buffer.write('=> $_oneLineCall$endOfLine');
-    } else {
-      buffer.writeln('{');
-      for (final line in _lines) {
-        buffer.writeln('  $line');
+
+      return;
+    }
+
+    if (_lines.isEmpty) {
+      if (_isInAbstractClass) {
+        buffer.write(';');
+        return;
       }
 
-      buffer.write('}');
+      throw Exception(
+        'The method is not in an abstract class, but has no implementation (lines and oneLineCall are both null)',
+      );
     }
+
+    buffer.writeln('{');
+    for (final line in _lines) {
+      buffer.writeln('  $line');
+    }
+
+    buffer.write('}');
   }
 }
