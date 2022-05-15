@@ -164,7 +164,7 @@ class ClassBuilder implements BaseBuilder {
             buffer,
             name: field._name!,
             isPrivate: false,
-            isNullable: field._isNullable,
+            isNullable: field._isNullable || field._name!.startsWith('_'),
             asNamed: true,
           );
         }

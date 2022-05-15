@@ -324,7 +324,7 @@ class DartCodeWriter {
     StringBuffer buffer, {
     required String name,
     String? type,
-    MethodParameterType parameterType = MethodParameterType.regular,
+    ParameterType parameterType = ParameterType.regular,
   }) {
     if (name.isEmpty) {
       throw Exception('Name must not be empty');
@@ -332,7 +332,7 @@ class DartCodeWriter {
 
     buffer.write('  ');
 
-    if (parameterType == MethodParameterType.regular) {
+    if (parameterType == ParameterType.regular) {
       if (type != null) {
         buffer.write(type);
       }
@@ -342,7 +342,7 @@ class DartCodeWriter {
       return;
     }
 
-    if (parameterType == MethodParameterType.optional) {
+    if (parameterType == ParameterType.optional) {
       if (type != null) {
         buffer.write('$type ');
       }

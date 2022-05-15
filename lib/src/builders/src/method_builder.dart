@@ -56,7 +56,7 @@ class MethodBuilder implements BaseBuilder {
     required String type,
   }) {
     _parameters.add(
-      MethodParameter(name, type, MethodParameterType.regular),
+      MethodParameter(name, type, ParameterType.regular),
     );
     return this;
   }
@@ -72,7 +72,7 @@ class MethodBuilder implements BaseBuilder {
     }
     _hasOptional = true;
     _parameters.add(
-      MethodParameter(name, type, MethodParameterType.optional),
+      MethodParameter(name, type, ParameterType.optional),
     );
     return this;
   }
@@ -88,7 +88,7 @@ class MethodBuilder implements BaseBuilder {
     }
     _hasNamed = true;
     _parameters.add(
-      MethodParameter(name, type, MethodParameterType.named),
+      MethodParameter(name, type, ParameterType.named),
     );
     return this;
   }

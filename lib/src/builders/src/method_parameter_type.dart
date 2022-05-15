@@ -1,6 +1,6 @@
 part of '../builders.dart';
 
-enum MethodParameterType {
+enum ParameterType {
   regular,
   named,
   optional,

@@ -3,11 +3,11 @@ part of '../builders.dart';
 class MethodParameter {
   final String name;
   final String type;
-  final MethodParameterType methodType;
+  final ParameterType methodType;
 
   MethodParameter(this.name, this.type, this.methodType);
 
-  bool get isRegular => methodType == MethodParameterType.regular;
-  bool get isNamed => methodType == MethodParameterType.named;
-  bool get isOptional => methodType == MethodParameterType.optional;
+  bool get isRegular => methodType == ParameterType.regular;
+  bool get isNamed => methodType == ParameterType.named;
+  bool get isOptional => methodType == ParameterType.optional;
 }
