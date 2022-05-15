@@ -1,3 +1,7 @@
+## 0.0.6
+
+- If a method has no implementation (oneLineCall or lines filled) and belongs to an abstract class, its body (e.g. "{}") now is not printed. If it does not belong to an abstract class, writeTo throws exception.
+
 ## 0.0.5
 
 - Allow to provide default values for method parameters.
