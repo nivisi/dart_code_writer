@@ -1,3 +1,12 @@
+## 0.0.7
+
+Allow to use forceNotRequired when creating a method parameter. Only valid for abstract classes to be able to create method signatures like this:
+
+```dart
+// Notice: it is both named and non-nullable, but has no required keyword.
+void call({int param});
+```
+
 ## 0.0.6
 
 - If a method has no implementation (oneLineCall or lines filled) and belongs to an abstract class, its body (e.g. "{}") now is not printed. If it does not belong to an abstract class, writeTo throws exception.

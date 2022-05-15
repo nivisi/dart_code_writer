@@ -1,6 +1,6 @@
 name: dart_code_writer
 description: Helpers for Dart generators that make Dart code generation easier.
-version: 0.0.6
+version: 0.0.7
 homepage: https://github.com/nivisi/dart_code_writer
 repository: https://github.com/nivisi/dart_code_writer
 
