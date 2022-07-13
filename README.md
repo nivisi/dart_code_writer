@@ -4,7 +4,7 @@ Helpers for Dart generators that make Dart code generation easier.
 
 ---
 
-_More info to come soon ..._
+While there is no documentation yet, you can have a look at the [`controllable_generator`](https://github.com/nivisi/controllable/tree/develop/packages/controllable_generator) for the reference. `dart_code_writer` is used [here](https://github.com/nivisi/controllable/tree/develop/packages/controllable_generator/lib/src/generator/helpers/src).
 
 <!-- References -->
 [pub-version-img]: https://img.shields.io/badge/pub-v0.0.7-green
